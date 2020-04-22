@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Laravel\Passport\Exceptions\MissingScopeException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +53,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof MissingScopeException) {
+            return response()->json(['error'=>'Sem autorização.'],401);
+        }
         return parent::render($request, $exception);
     }
 }
